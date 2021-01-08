@@ -1,0 +1,139 @@
+\section{Netlists}
+
+\textit{Each entry creates an \say{instance} of a device element, indicating the element type (first letter), its nodal connections, \& any element-specific param\textquotesingle s:}
+\begin{lstlisting}
+<device> <nd>+ <val> <model>? <param>*
+\end{lstlisting}
+\textit{Common to most element types are options }\texttt{m}\textit{ (\underline{m}ultiple) and }\texttt{scale}\textit{ (for sizing main parameter).}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Resistors}
+\begin{lstlisting}
+Rxxx n+ n- [resistance|r=]value 
++ [ac=val] [temp=val] [dtemp=val] 
++ [tc1=val] [tc2=val] [noisy=0|1]
+\end{lstlisting}
+
+%\mycolX{60mm}{\textit{\code{Rxxx n+ n- [resistance|r=]value [ac=val]}}}\\
+%\mycolX{60mm}{\textit{\code{+  [m=val] [scale=val] [temp=val] [dtemp=val] }}} \\
+%\mycolX{60mm}{\textit{\code{+ [tc1=val] [tc2=val] [noisy=0|1]}}} \\
+\mycolX{45mm}{\code{R2 5 7 1K ac=2K}} \$ 1k resistor\\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Capacitors}
+
+\begin{lstlisting}
+Cxxx n+ n- [value] [mname] [scale=val] 
++ [temp=val] [dtemp=val] [tc1=val] 
++ [tc2=val] [ic=init_cond.]
+\end{lstlisting}
+%\mycolX{40mm}{\textit{\code{Cxxx n+ n- [value] [mname] [m=val] }}} \\
+%\mycolX{40mm}{\textit{\code{+[scale=val] [temp=val] [dtemp=val] [tc1=val] }}} \\
+%\mycolX{40mm}{\textit{\code{+[tc2=val] [ic=init\_condition]}}} \\
+\mycolX{45mm}{\code{Cosc 17 23 10U IC=3V}} \$ 10$\mu$ cap. \\
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Inductors}
+\begin{lstlisting}
+Lyyy n+ n- [value] [mname] [nt=val]
++ [temp=val] [dtemp=val] [tc1=val] 
++ [tc2=val] [ic=init_cond.]
+\end{lstlisting}
+%\mycolX{40mm}{\textit{\code{Lyyy n+ n- [value] [mname] [nt=val] }}} \\
+%\mycolX{40mm}{\textit{\code{+[m=val] [scale=val] [temp=val] [dtemp=val] }}} \\
+%\mycolX{40mm}{\textit{\code{+[tc1=val] [tc2=val] [ic=init\_condition]}}} \\
+\mycolX{45mm}{\code{LSHUNT 3 9 10U IC=15.1MA}} \$ inductor \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Switches}
+\begin{lstlisting}
+Sxxx n+ n- nc+ nc- model [on|off]
+\end{lstlisting}
+\mycolX{47mm}{\code{s1 1 2 3 4 switch1 ON}} \$ switch \\
+\begin{lstlisting}
+Wyyy n+ n- vnam model [on][off]
+\end{lstlisting}
+\mycolX{47mm}{\code{wreset 5 6 vclck lossyswitch OFF}} \$ I-ctrl\textquotesingle d \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Independent Sources}
+\textit{Independent source input can be defined by a function $\in$: } \texttt{pulse}, \texttt{sin}, \texttt{exp}, \texttt{pwl}, \texttt{sffm}, \texttt{am}, \texttt{trnoise}, \texttt{trrandom}, \texttt{external}.\\
+
+\begin{lstlisting}
+[I|V]xxx n+ n- [[dc] dc/tran value]
++[ac [acmag [acphase]]] 
++[distof1 [f1mag [f1phase]]]
++[distof2 [f2mag [f2phase]]]
+\end{lstlisting}
+
+\mycolX{53mm}{\code{Vin 13 2 0.001 AC 1 SIN(0 1 1M)}} \$ V-src \\
+\mycolX{53mm}{\code{Iin 8 9 AC .33 45 SFFM(0 1 10K 5 1K)}} \$ I-src \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Dependent Sources}
+\textit{$\exists$ 4 types of dependent sources: VCCS (G), VCVS (E), CCCS (F), CCVS (H). One can create source non-linearity (not shown) by additionally specifying arbitrary controlling expressions or polynomials.}\\
+\begin{lstlisting}
+[E|G]xxx N+ N- NC+ NC- VALUE 
+\end{lstlisting}
+\mycolX{40mm}{\code{E1 2 3 14 1 2.0}} \$ VCVS \\
+\begin{lstlisting}
+[F|H]xxx N+ N- VNAM VALUE 
+\end{lstlisting}
+\mycolX{45mm}{\textit{\code{F1 13 5 VSENS 5 m=2}}} \$ CCCS \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Diodes}
+\begin{lstlisting}
+Dxxx n+ n- mname [area=val] [pj=val] 
++ [off] [ic=vd] [temp=val] [dtemp=val]
+\end{lstlisting}
+\mycolX{45mm}{\textit{\code{DBRIDGE 2 10 DIODE1}}} \$ Diode \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{BJTs}
+
+\begin{lstlisting}
+Qxxx nc nb ne [ns] [tj] mname 
++ [area=val] [areac=val] [areab=val]
++ [off] [ic=vbe,vce] [temp=val]
++ [dtemp=val]
+\end{lstlisting}
+%\mycolX{40mm}{\textit{\code{Qxxx nc nb ne [ns] [tj] mname [area=val] }}} \\
+%\mycolX{40mm}{\textit{\code{+ [areac=val] [areab=val] [m=val] [off] }}} \\
+%\mycolX{40mm}{\textit{\code{+ [ic=vbe,vce] [temp=val] [dtemp=va]}}} \\
+\mycolX{48mm}{\code{Q23 10 24 13 QMOD IC=0.6, 5.0}} \$ BJT \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{MOSFETs}
+\begin{lstlisting}
+Mxxx nd ng ns nb mname [m=val] [l=val] 
++ [w=val] [ad=val] [as=val] [pd=val]
++ [ps=val] [nrd=val] [nrs=val] [off] 
++ [ic=vds, vgs, vbs] [temp=t]
+\end{lstlisting}
+%\mycolX{40mm}{\textit{\code{Mxxx nd ng ns nb mname [m=val] [l=val] [w=val]}}} \\
+%\mycolX{40mm}{\textit{\code{+ [ad=val] [as=val] [pd=val] [ps=val] [nrd=val]}}} \\
+%\mycolX{40mm}{\textit{\code{+ [nrs=val] [off] [ic=vds, vgs, vbs] [temp=t]}}} \\
+\mycolX{48mm}{\code{M31 2 17 6 10 MOSN L=5U W=2U}} \$ MOSFET \\
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Subcircuits}
+\textit{Afford hierarchically nestable, and reusable sub-circuits. These become flattened upon compilation.  Subcircuits may expose an arbitrary \# of nodes external to themselves. For example, a voltage divider:}\\
+\mycolX{35mm}{\code{.subckt vdivide 1 2 3}} \$ 3 ports \\
+\mycolX{35mm}{\code{r1 1 2 10K}} \$ 10K resistor \\
+\mycolX{35mm}{\code{r2 2 3 5K}} \$ 5K resistor \\
+\mycolX{35mm}{\code{.ends vdivide}} \$ exclude to end all \\[2mm]
+\textit{Can parameterize subckts, here with rval, cval:}\\
+\mycolX{45mm}{\code{.subckt myfilter in out rval=100k  cval=100nF}} \\

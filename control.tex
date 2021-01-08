@@ -1,0 +1,213 @@
+\section{Control}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Batch (or \say{Control}) Mode}
+\textit{Use this mode for scripting the build and execution of a SPICE simulation. Batch mode commands are generally prefaced with a . (dot), unless they appear in an explicit }\texttt{.control}\textit{ section:}\\
+\mycolX{40mm}{\code{.nodeset v(12)=4.5 v(4)=2.2}} \# iter. start guess\\
+\mycolX{40mm}{\code{.ic v(11)=5 v(4)=-5 v(2)=2.2}} \# set init. cond\textquotesingle s\
+\mycolX{40mm}{\code{.control}} \# enter \\
+\mycolX{40mm}{\code{\dots}} \# control section \\
+\mycolX{40mm}{\code{.endc}} \# leave \\
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Interactive}
+\textit{This is like a REPL except that the simulation requires an explicit directive in order to commence. Side-effect having commands issued interactively include:}
+{\footnotesize 
+\begin{multicols}{4}\begin{itemize}[leftmargin=0pt,label={}]
+    \item ac
+    \item alias
+    \item alter
+    \item altermod
+    \item alt\textquotesingle rparam
+    \item asciiplot
+    \item aspice
+    \item bug
+    \item cd
+    \item cdump
+    \item circbyline
+    \item codemodel
+    \item compose
+    \item dc
+    \item define
+    \item deftype
+    \item delete
+    \item destroy
+    \item devhelp
+    \item diff
+    \item display
+    \item echo
+    \item edit
+    \item edisplay
+    \item eprint
+    \item eprvcd
+    \item fft
+    \item fourier
+    \item getcwd
+    \item gnuplot
+    \item hardcopy
+    \item help
+    \item history
+    \item inventory
+    \item iplot
+    \item jobs
+    \item let
+    \item linearize
+    \item listing
+    \item load
+    \item mc\_source
+    \item meas
+    \item m[r]dump
+    \item noise
+    \item op
+    \item option
+    \item plot
+    \item pre\_<cmd>
+    \item print
+    \item psd
+    \item quit
+    \item rehash
+    \item remcirc
+    \item remzerov\textquotesingle c
+    \item reset
+    \item reshape
+    \item resume
+    \item rspice
+    \item rusage
+    \item save
+    \item sense
+    \item set
+    \item setcs
+    \item setcirc
+    \item setplot
+    \item setscale
+    \item setseed
+    \item settype
+    \item shell
+    \item shift
+    \item show
+    \item showmod
+    \item snload
+    \item snsave
+    \item source
+    \item spec
+    \item status
+    \item step
+    \item stop
+    \item strcmp
+    \item sysinfo
+    \item tf
+    \item trace
+    \item tran
+    \item transpose
+    \item unalias
+    \item undefine
+    \item unlet
+    \item unset
+    \item version
+    \item where
+    \item wrdata
+    \item write
+    \item wrs2p
+\end{itemize}\end{multicols}}
+
+\textit{Interactive mode is governed by setting general options in addition to the \say{internal variables} described below:}
+{\footnotesize 
+\begin{multicols}{3}\begin{itemize}[leftmargin=0pt,label={}]
+    \item appendwrite
+    \item askquit
+    \item batchmode
+    \item colorN
+    \item controlswait
+    \item cpdebug
+    \item curplot
+    \item curplotdate
+    \item curplotname
+    \item curplottitle
+    \item debug
+    \item device
+    \item diff\_abstol
+    \item diff\_reltol
+    \item diff\_vntol
+    \item echo 
+    \item editor
+    \item filetype
+    \item fourgridsize
+    \item gridsize
+    \item gridstyle
+    \item hcopydev
+    \item hcopyfont
+    \item hcopydevtype
+    \item hcopyfontsize
+    \item hcopyscale
+    \item hcopywidth
+    \item hcopyheight
+    \item hcopypscolor
+    \item hcopypstxcolor
+    \item height
+    \item history
+    \item inputdir
+    \item interactive
+    \item lprplot5
+    \item lprps
+    \item modelcard
+    \item moremode
+    \item nfreqs
+    \item ngbehavior
+    \item no\_auto\_gnd
+    \item nobjthack
+    \item nobreak
+    \item noasciiplotvalue
+    \item noclobber
+    \item noglob
+    \item nolegend
+    \item nomatch
+    \item noparse
+    \item noprintscale
+    \item nosavecurrents
+    \item nosort
+    \item nostepsizelimit
+    \item nosubckt
+    \item notrnoise
+    \item numdgt
+    \item num\_threads
+    \item oscompiled
+    \item plotstyle
+    \item pointchars
+    \item polysteps
+    \item program
+    \item prompt
+    \item rawfile
+    \item remote\_shell
+    \item renumber
+    \item rndseed
+    \item rhost
+    \item rprogram
+    \item shared\_mode
+    \item sim\_status
+    \item sourcepath
+    \item specwindow
+    \item specwindoworder
+    \item spicepath
+    \item sqrnoise
+    \item strict\_err\textquotesingle handl\textquotesingle g
+    \item subend
+    \item subinvoke
+    \item substart
+    \item term
+    \item ticchar
+    \item ticmarks
+    \item ticlist
+    \item units
+    \item unixcom
+    \item wfont
+    \item wfont\_size
+    \item width
+    \item win\_console
+    \item x11lineararcs
+    \item xbrushwidth
+    \item wgridwidth
+    \item xfont
+    \item xtrtol
+\end{itemize}\end{multicols}}

@@ -1,0 +1,93 @@
+\section{XSPICE}
+\textit{Package comes with numerous pre-built models. These afford the simulation of digital and analog components that would be computationally-prohibitive if built atop only analog foundational components.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{\href{https://sourceforge.net/p/ngspice/ngspice/ci/master/tree/src/xspice/icm/digital/}{Digital Models}}
+{\footnotesize
+\begin{multicols}{3}\noindent\begin{itemize}[label={},leftmargin=0pt,topsep=0pt]
+    \item Buffer
+    \item Inverter
+    \item And
+    \item Nand
+    \item Or
+    \item Nor
+    \item Xor
+    \item Xnor
+    \item Tristate
+    \item Pullup
+    \item Pulldown
+    \item D Flip Flop
+    \item JK FF
+    \item Toggle FF
+    \item Set-Reset FF
+    \item D Latch
+    \item Set-Reset Latch
+    \item State Mach\textquotesingle n
+    \item Freq. Divid\textquotesingle r
+    \item RAM
+    \item Digital Source
+    \item LUT
+    \item General LUT
+\end{itemize}\end{multicols}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{\href{https://sourceforge.net/p/ngspice/ngspice/ci/master/tree/src/xspice/icm/analog/}{Analog Models}}
+{\footnotesize
+\begin{multicols}{3}\begin{itemize}[label={},leftmargin=0pt]
+    \item Gain
+    \item Summer
+    \item Multiplier
+    \item Divider
+    \item Limiter
+    \item Contrl\textquotesingle d Lmtr
+    \item PWL Ctrl\textquotesingle d Src
+    \item Filesource
+    \item Analog Switch
+    \item Zener Diode
+    \item Current Limiter
+    \item Hysteresis Blk
+    \item Differentiator
+    \item Integrator
+    \item S-Domn Xfer F
+    \item Slew-rate blk
+    \item Induct. Coupl\textquotesingle g
+    \item Magnetic Core
+    \item Ctlrd Sine Osc
+    \item Ctlrd Trng Osc 
+    \item Ctlrd Sqr Osc
+    \item Ctlrd 1-shot
+    \item Cap\textquotesingle tance Mtr
+    \item Inductance Mtr
+    \item Memristor
+    \item 2d table
+    \item 3d table
+    \item Simpl Diod Mdl
+    \end{itemize}\end{multicols}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Analog-Digital Bridge Models}
+{\footnotesize
+\begin{multicols}{2}\begin{itemize}[label={},leftmargin=0pt]
+    \item D-to-A Node Bridge
+    \item A-to-D Node Bridge
+    \item Ctrld Digital Osc
+    \item Node Bridge, D-to-Real
+    \item Node Bridge, Real-to-A
+    \item Gain Blk, Event Data
+    \item Z**-1 Blk
+\end{itemize}\end{multicols}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{User-Created}
+
+\textit{For new models, create the \say{\ul{I}nterface \ul{S}pecification \ul{F}ile}, and \say{\ul{M}odel \ul{D}efinition \ul{F}ile}, the first which specifies the interface, the latter which implements it. For new \say{\ul{U}ser \ul{D}efined \ul{N}odes}, create a UDN file. The new files must be referenced via the }\texttt{ngspice/src/xspice/icm/<type>/modpath.lst}\textit{ file and then ngspice recompiled. ISFs comprise a table indicating metadata about the model\textquotesingle s \ul{ports}, \ul{parameters}, and \ul{storage variables}. MDFs implement the functionality ISFs specify in C code, making use of a number of \say{accessor macros} (circuit, parameter, and input and output data, etc), and helper functions (for data smoothing, simulator convergence control, $\mathbb{C}$-math, etc). Review \href{https://sourceforge.net/p/ngspice/ngspice/ci/master/tree/src/xspice/}{XSPICE sourcecode} to base new code off of other implementations.}\\
+
+

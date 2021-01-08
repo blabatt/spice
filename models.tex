@@ -1,0 +1,35 @@
+\section{Modelling Elements}
+
+
+\textit{General format and example:}\\
+\begin{lstlisting}
+.model [NAME] [TYPE] [PARAM]*
+\end{lstlisting}
+%\mycolX{60mm}{\code{.model [NAME] [TYPE] ([PARAM]* )}}  \\
+\mycolX{60mm}{\code{.model MOD1 npn (bf=50 is=1e-13 vbf=50)}}  \\
+
+
+{\footnotesize 
+\begin{multicols}{3}\begin{itemize}[leftmargin=0pt,label={}]
+    \item \underline{R}esistor
+    \item \underline{C}apacitor
+    \item Inductor (\underline{L})
+    \item V-Controlled \underline{SW}itch
+    \item \underline{C}ur-Controlled \underline{SW}itch
+    \item \underline{U}nif. \underline{RC} Mdl
+    \item \underline{L}ossy \underline{TRA}nsm. 
+    \item \underline{D}iode
+    \item \underline{NPN} Transistor
+    \item \underline{PNP} Transistor
+    \item \underline{N}-channel \underline{JF}ET
+    \item \underline{P}-channel \underline{JF}ET
+    \item \underline{N}-channel \underline{MOS}FET
+    \item \underline{P}-channel \underline{MOS}FET
+    \item \underline{N}-channel \underline{M}ES\underline{F}ET
+    \item \underline{P}-channel \underline{M}ES\underline{F}ET
+    \item Powr \underline{VD} \underline{MOS}
+\end{itemize}\end{multicols}
+}
+
+\textit{There are many, many model parameters. For example, you can choose from amongst over 20 distinct MOSFET models, each of which is controlled by a dozen or more parameters. In all, $\exists$ over 100 MOSFET parameters alone. Conversely, inductors are much simpler: $\exists$ only 1 model controlled by only 8 parameters.}
+

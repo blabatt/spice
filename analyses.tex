@@ -1,0 +1,94 @@
+\section{Analyses}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{AC}
+\textit{Undergo variation on AC frequency, progressing in \underline{dec}ade, \underline{oct}ave, or \underline{lin}ear fashion for indicated \underline{n}umb of pts:}\\
+\begin{lstlisting}
+.ac [dec|oct|lin] n fstart fstop
+\end{lstlisting}
+%\mycolX{45mm}{\code{\textit{.ac [dec|oct|lin] n fstart fstop}}} \# {\scriptsize ac analysis} \\
+\mycolX{45mm}{\code{.ac dec 10 1K 100MEG}} \# {\scriptsize $f \in [1e3,1e8]$ }\\[1mm]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{DC}
+\textit{Sweep a source, resistor, or temperature:}\\
+\begin{lstlisting}
+.dc srcnam vstart vstop vincr
+\end{lstlisting}
+%\mycolX{40mm}{\code{\textit{.dc srcnam vstart vstop vincr}}} \# {\scriptsize dc analysis}\\
+\mycolX{40mm}{\code{.dc VIN 0.25 5.0 0.25}} \# {\scriptsize sweep $V_{IN} \in [.25,5]$}\\
+\mycolX{40mm}{\code{.dc TEMP -15 75 5}} \# {\scriptsize temp sweep} \\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Distortion}
+\begin{lstlisting}
+.disto dec nd fstart fstop
+\end{lstlisting}
+%\mycolX{40mm}{\code{\textit{.disto dec nd fstart fstop}}} \# {\scriptsize }\\
+\mycolX{40mm}{\code{.disto dec 10 1kHz 100MEG}} \# {\scriptsize }\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Noise}
+\begin{lstlisting}
+.noise v(output) src [dec|lin|oct] 
++ pts fstart fstop
+\end{lstlisting}
+%\mycolX{50mm}{\code{\textit{.noise v(output) src [dec|lin|oct] pts fstart fstop}}}\\
+\mycolX{55mm}{\code{.noise v(5) VIN dec 10 1kHz 100MEG}} \# {\scriptsize }\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Operating Point}
+\mycolX{40mm}{\code{\textit{.op}}} \# {\scriptsize }\\[1mm]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Pole-Zero}
+\begin{lstlisting}
+.pz nd1 nd2 nd3 nd4 
++ [vol|cur] [pol|zer|pz]
+\end{lstlisting}
+%\mycolX{55mm}{\code{\textit{.pz nd1 nd2 nd3 nd4 [vol|cur] [pol|zer|pz]}}} \\
+\mycolX{35mm}{\code{.pz 1 0 3 0 cur pol}} \# {\scriptsize pole-only for currents}\\
+\mycolX{35mm}{\code{.pz 1 0 3 0 vol pz}} \# {\scriptsize poles \& zeros}\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Sensitivity}
+\begin{lstlisting}
+.sens outvar
++ [dec|oct|lin] n fstart fstop]
+\end{lstlisting}
+%\mycolX{40mm}{\code{\textit{.sens outvar}}} \# {\scriptsize }\\
+%\mycolX{40mm}{\code{\textit{+ [dec|oct|lin] n fstart fstop]}}} \\
+\mycolX{40mm}{\code{.sens V(1,OUT)}} \# {\scriptsize }\\
+\mycolX{40mm}{\code{.sens V(OUT) ac dec 10 100 100k}} \\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Transfer Function}
+\begin{lstlisting}
+.tf outvar insrc
+\end{lstlisting}
+%\mycolX{30mm}{\code{\textit{.tf outvar insrc}}} \# {\scriptsize }\\
+\mycolX{30mm}{\code{.tf v(5, 3) VIN}} \# {\scriptsize ratio $\frac{V_{5}}{V_{IN}}$}\\
+\mycolX{30mm}{\code{.tf i(VLOAD) VIN}} \# {\scriptsize }\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Transient}
+\textit{Study temporal transient, optionally \underline{u}sing \underline{i}nitial \underline{c}onditions:}\\
+\begin{lstlisting}
+.tran tstep tstop 
++ [tstart [tmax]] [uic]
+\end{lstlisting}
+%\mycolX{40mm}{\code{\textit{.tran tstep tstop [tstart [tmax]] [uic]}}} \\
+\mycolX{40mm}{\code{.tran 1ns 100ns}} \# {\scriptsize $100ns$ transient}\\
+\mycolX{40mm}{\code{.tran 1ns 1us 500ns}} \# {\scriptsize start later}\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Periodic Steady State}
+\textit{[experimental] Calculate indicated harmonics:}\\
+\begin{lstlisting}
+.pss gfreq tstab oscnob psspoints
++ harms sciter steadycoeff [uic]
+\end{lstlisting}
+%\mycolX{60mm}{\code{\textit{.pss gfreq tstab oscnob psspoints }}} \\
+%\mycolX{60mm}{\code{\textit{+ harms sciter steadycoeff [uic]}}} \\
+\mycolX{60mm}{\code{.pss 150 200e-3 2 1024 11 50 5e-3 uic}} \\
+\mycolX{60mm}{\code{.pss 624e6 500n bout 1024 10 100 5e-3 uic}} \\

@@ -1,0 +1,79 @@
+\section{Extracting Data}
+
+\textit{$\exists$ several means of getting data out: } \texttt{.meas} \textit{ (interactive-mode only), }\texttt{.plot}, \texttt{.print}, \texttt{.four}, \texttt{.probe} \textit{, and }\texttt{.save}. \texttt{.meas}\textit{ is used in interactive mode, whereas }\texttt{ .plot}, \texttt{.print}, \texttt{.four}, \textit{ in batch, and }\texttt{.probe }\textit{ and }\texttt{.save}\textit{ in both modes.}\\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Save}
+
+\begin{lstlisting}
+.save [vector]+
+\end{lstlisting}
+%\mycolX{40mm}{\code{\textit{.save [vector]+}}} \\
+\mycolX{40mm}{\code{.save i(vin) node1 v(node2)}} \# {\scriptsize save 3 nodes}\\
+\mycolX{40mm}{\code{.save \@m1[id] vsource\#branch}} \# {\scriptsize internal device data}\\[1mm]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Print}
+\textit{Print \underline{o}utput \underline{v}ariable \say{vectors}:}\\
+\begin{lstlisting}
+.print prtype [ov]+
+\end{lstlisting}
+%\mycolX{30mm}{\code{\textit{.print prtype [ov]+}}} \# {\scriptsize prt \underline{o}utput \underline{v}ariable \say{vectors}}\\
+\mycolX{40mm}{\code{.print tran v(4) i(vin)}} \\
+\mycolX{40mm}{\code{.print dc v(2) i(vsrc) v(2, 7)}} \# {\scriptsize volt-$\Delta$, $v(2)-v(7)$}\\
+\mycolX{40mm}{\code{.print ac vm(4, 2)}} \# {\scriptsize volt-$\Delta$ \underline{m}agnitude}\\[1mm]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Plot}
+\begin{lstlisting}
+.plot pltype [ov1 [(plo1, phi1)]?]+
+\end{lstlisting}
+%\mycolX{45mm}{\code{\textit{.plot pltype [ov1 [(plo1, phi1)]?]+}}} \# {\scriptsize }\\
+\mycolX{40mm}{\code{.plot dc v(4) v(5) v(1)}} \# {\scriptsize no \say{plo}, \say{phi}}\\
+\mycolX{40mm}{\code{.plot dc emit base out}} \# {\scriptsize using node names}\\
+\mycolX{40mm}{\code{.plot db(coll) ph(coll)}} \# {\scriptsize Bode-style plot}\\
+\mycolX{40mm}{\code{.plot tran v(17, 5) (2, 5)}}  {\scriptsize }\\[1mm]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Four[ier]}
+\begin{lstlisting}
+.four freq [ov]+
+\end{lstlisting}
+%\mycolX{30mm}{\code{\textit{.four freq [ov]+}}} \# {\scriptsize fourier analysis}\\
+\mycolX{30mm}{\code{.four 100K v(5)}} \# {\scriptsize  fundamental \texttt{freq} $100k$}\\[1mm]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Probe}
+\begin{lstlisting}
+.probe [vector]+
+\end{lstlisting}
+%\mycolX{40mm}{\code{\textit{.probe [vector]+}}} \# {\scriptsize save to rawfile}\\
+\mycolX{40mm}{\code{.probe i(vin) input output}} \\[1mm]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Meas[ure]}
+\texttt{.meas} \textit{ defaults to extracting time, use \texttt{FIND} for another variable. Store measurement in \texttt{result} parameter, and transform it with specified \underline{FUNC}tion $\in$ {\scriptsize [AVG|MAX[\_AT]|MIN[\_AT]|PP|RMS|DERIV|INTEG]}. Snapshot data at specific time with \texttt{WHEN}, or bookend a range of time (generally, the abscissa) with triggers using \texttt{\underline{TRIG}}ger .. \texttt{\underline{TARG}}et, or at specified times using \texttt{FROM} .. \texttt{TO}.}\\
+\begin{lstlisting}
+.MEAS [DC|AC|TRAN|SP] result [FUNC]?
++ [[TRIG|TARG] trigvar VAL=val [TD=td]? 
++ [CROSS=num|LAST]? [RISE=num|LAST]?
++ [FALL=num|LAST]? [AT=time]?
+\end{lstlisting}
+%{\scriptsize \mycolX{40mm}{\code{\textit{.MEAS [DC|AC|TRAN|SP] result [FUNC]?}}}\\
+%\mycolX{40mm}{\code{\textit{+ [[TRIG|TARG] trig\_var VAL=val [TD=td]? }}} \\
+%\mycolX{40mm}{\code{\textit{+ [CROSS=\# | CROSS=LAST]? [RISE=\# | RISE=LAST]?}}} \\
+%\mycolX{40mm}{\code{\textit{+ [FALL=\# | FALL=LAST]? [AT=time]?}}}} \\
+\mycolX{40mm}{\code{.measure tran tdiff }}\\
+\mycolX{40mm}{\code{+ TRIG v(1) VAL=0.5 RISE=1 }}\\
+\mycolX{40mm}{\code{+ TARG v(1) VAL=0.5 RISE=2}}\\
+\mycolX{40mm}{\code{.measure tran teval }} \\
+\mycolX{40mm}{\code{+ WHEN v(2)=0.7 CROSS=LAST}}\\
+\mycolX{40mm}{\code{.measure tran teval }} \\
+\mycolX{40mm}{\code{+ WHEN v(2)=v(1) RISE=LAST}}\\
+\mycolX{40mm}{\code{.measure tran yeval FIND v(2) }}\\
+\mycolX{40mm}{\code{+ WHEN v(1)=-0.4 FALL=LAST}} \\
+\mycolX{40mm}{\code{.meas tran out\_slew trig v(out) }}\\
+\mycolX{40mm}{\code{+ val=`0.2*vp` rise=2 }} \\
+\mycolX{40mm}{\code{+ targ v(out) val=`0.8*vp` rise=2}} \\
+

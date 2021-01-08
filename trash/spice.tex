@@ -1,0 +1,434 @@
+\section{\href{http://ngspice.sourceforge.net/docs/ngspice-manual.pdf}{SPICE}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{General Syntax}
+\begin{lstlisting}
+.TITLE PNP Power Switch
+\end{lstlisting}
+
+\mycolX{40mm}{\code{.TITLE PNP Power Switch}} \$ title \\
+\mycolX{40mm}{\code{* Simulating a BJT switch}} \$ line comment \\
+\mycolX{40mm}{\code{.GLOBAL gnd vcc}} \$ global elements \\
+\mycolX{40mm}{\code{.INCLUDE /my/file}} \$ import file \\
+\mycolX{40mm}{\code{.LIB /my/file mod1}} \$ import module \\
+\mycolX{40mm}{\code{.temp 27}} \$ set temperature \\
+\mycolX{40mm}{\code{.param pvcc=5}} \$ variables \\
+\mycolX{40mm}{\code{.param vmax=\{1 + pvcc\}}} \$ expressions \\
+\mycolX{40mm}{\code{.func foo(a,b) = {a + b}}} \$ function \\
+\mycolX{40mm}{\code{RF2=1K \$ Gain set by RF2 }} \$ in-line cmnt \\
+\mycolX{40mm}{\code{.END}} \$ end SPICE \\
+
+\textit{Conditionals used for model-selection:}\\
+{\scriptsize
+\mycolX{60mm}{\code{.if(m0==1) .model N1 NMOS level=49 Version=3.1}} \\
+\mycolX{60mm}{\code{.elseif(m1==1) .model N1 NMOS level=49 Version=3}} \\
+\mycolX{60mm}{\code{.else .model N1 NMOS level=49 Version=3.3.0}} \\
+\mycolX{60mm}{\code{.endif}} \\
+}
+
+\textit{Scale factors $\in$ [T|G|M|K|m|u|n|p|f] suffixed directly following number.}\\
+
+\textit{Expressions can include many of the normal functions: trig (\texttt{sin}, \texttt{cos}, \texttt{tan}, \texttt{acos}, \texttt{asin}, \texttt{atan}), hyperbolic (\texttt{sinh}, \texttt{cosh}, \texttt{acosh}, \texttt{asinh}, \texttt{atanh}), exponential (\texttt{exp}, \texttt{ln}, \texttt{log}, \texttt{log10}), misccellaneous (\texttt{abs}, \texttt{sqrt}, \texttt{u}, \texttt{u2}, \texttt{uramp}, \texttt{floor}, \texttt{ceil}, \texttt{i}).} \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Net Lists}
+
+\textit{Each entry consists of an \say{instance} of a device element, indicating a type (first letter of \texttt{DEVICE}), nodal connections, and element-specific parameters. In general:}\\
+{\scriptsize
+\mycolX{40mm}{\code{DEVICE [NODE]+ VALUE [MODEL]? [PARAM]*}}} \\[2mm]
+
+
+\textit{Resistor, capacitor, inductor, switches entered as follows:}\\
+
+{\scriptsize 
+\mycolX{60mm}{\textit{\code{RXXXXXXX n+ n- [resistance|r=]value [ac=val]}}}\\
+\mycolX{60mm}{\textit{\code{+  [m=val] [scale=val] [temp=val] [dtemp=val] }}} \\
+\mycolX{60mm}{\textit{\code{+ [tc1=val] [tc2=val] [noisy=0|1]}}} \\
+\mycolX{40mm}{\code{R2 5 7 1K ac=2K}} \$ 1k resistor\\[1mm]
+
+\mycolX{40mm}{\textit{\code{CXXXXXXX n+ n- [value] [mname] [m=val] }}} \\
+\mycolX{40mm}{\textit{\code{+[scale=val] [temp=val] [dtemp=val] [tc1=val] }}} \\
+\mycolX{40mm}{\textit{\code{+[tc2=val] [ic=init\_condition]}}} \\
+\mycolX{40mm}{\code{COSC 17 23 10U IC=3V}} \$ 10$\mu$ capacitor \\[1mm]
+
+\mycolX{40mm}{\textit{\code{LYYYYYYY n+ n- [value] [mname] [nt=val] }}} \\
+\mycolX{40mm}{\textit{\code{+[m=val] [scale=val] [temp=val] [dtemp=val] }}} \\
+\mycolX{40mm}{\textit{\code{+[tc1=val] [tc2=val] [ic=init\_condition]}}} \\
+\mycolX{40mm}{\code{LSHUNT 23 51 10U IC=15.7MA}} \$ inductor \\[1mm]
+
+\mycolX{40mm}{\textit{\code{SXXXXXXX N+ N- NC+ NC- MODEL [ON][OFF]}}} \\
+\mycolX{40mm}{\textit{\code{WYYYYYYY N+ N- VNAM MODEL [ON][OFF]}}} \\
+\mycolX{40mm}{\code{s1 1 2 3 4 switch1 ON}} \$ switch \\
+\mycolX{40mm}{\code{wreset 5 6 vclck lossyswitch OFF}} \$ I-controlled \\[1mm]
+
+\mycolX{40mm}{\textit{\code{[I|V]XXXXXXX N+ N- [[DC] DC/TRAN VALUE] }}} \\
+\mycolX{40mm}{\textit{\code{+[AC [ACMAG [ACPHASE]]] }}} \\
+\mycolX{40mm}{\textit{\code{+[DISTOF1 [F1MAG [F1PHASE]]] }}} \\
+\mycolX{40mm}{\textit{\code{+[DISTOF2 [F2MAG [F2PHASE]]] }}} \\
+\mycolX{45mm}{\code{VIN 13 2 0.001 AC 1 SIN(0 1 1MEG)}} \$ Indep. V-source \\
+\mycolX{52mm}{\code{ISRC 23 21 AC 0.333 45.0 SFFM(0 1 10K 5 1K)}} \$ I-source \\[1mm]
+\textit{Note: ind. source input can be defined by a function $\in$: \texttt{pulse}, \texttt{sin}, \texttt{exp}, \texttt{pwl}, \texttt{sffm}, \texttt{am}, \texttt{trnoise}, \texttt{trrandom}, \texttt{external}.}\\
+
+\mycolX{40mm}{\textit{\code{[E|G]XXXXXXX N+ N- NC+ NC- VALUE [m=val]}}} \\
+\mycolX{40mm}{\textit{\code{[F|H]XXXXXXX N+ N- VNAM VALUE [m=val]}}} \\
+\mycolX{40mm}{\code{E1 2 3 14 1 2.0}} \$ VCVS \\
+\mycolX{40mm}{\textit{\code{F1 13 5 VSENS 5 m=2}}} \$ CCCS \\[1mm]
+
+\mycolX{40mm}{\textit{\code{DXXXXXXX n+ n- mname [area=val] [m=val] }}} \\
+\mycolX{40mm}{\textit{\code{+ [pj=val] [off] [ic=vd] [temp=val] [dtemp=val]}}} \\
+\mycolX{40mm}{\textit{\code{DBRIDGE 2 10 DIODE1}}} \$ Diode \\[1mm]
+
+\mycolX{40mm}{\textit{\code{QXXXXXXX nc nb ne [ns] [tj] mname [area=val] }}} \\
+\mycolX{40mm}{\textit{\code{+ [areac=val] [areab=val] [m=val] [off] }}} \\
+\mycolX{40mm}{\textit{\code{+ [ic=vbe,vce] [temp=val] [dtemp=va]}}} \\
+\mycolX{40mm}{\code{Q23 10 24 13 QMOD IC=0.6, 5.0}} \$ BJT \\[1mm]
+
+\mycolX{40mm}{\textit{\code{MXXXXXXX nd ng ns nb mname [m=val] [l=val] [w=val]}}} \\
+\mycolX{40mm}{\textit{\code{+ [ad=val] [as=val] [pd=val] [ps=val] [nrd=val]}}} \\
+\mycolX{40mm}{\textit{\code{+ [nrs=val] [off] [ic=vds, vgs, vbs] [temp=t]}}} \\
+\mycolX{40mm}{\code{M31 2 17 6 10 MOSN L=5U W=2U}} \$ MOSFET \\[1mm]
+
+% JFET
+% MESFET
+
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Control (Batch Mode)}
+
+\mycolX{40mm}{\code{.nodeset v(12)=4.5 v(4)=2.2}} \# iter. start guess\\
+\mycolX{40mm}{\code{.ic v(11)=5 v(4)=-5 v(2)=2.2}} \# set init. cond\textquotesingle s\
+\mycolX{40mm}{\code{.control}} \# enter \\
+\mycolX{40mm}{\code{\dots}} \# control section \\
+\mycolX{40mm}{\code{.endc}} \# leave \\
+
+\textit{When in a control section, you can use normal programmatic control techniques like }\texttt{label},\texttt{goto},\texttt{continue},\textit{ and }\texttt{break}\textit{, in addition to loops:}\\
+\mycolX{40mm}{\code{while <cond> \dots end}} \# while \\
+\mycolX{40mm}{\code{repeat <num> \dots end}} \# repeat\\
+\mycolX{40mm}{\code{dowhile <cond> \dots end}} \# dowhile\\
+\mycolX{40mm}{\code{foreach <var> <val> \dots end}} \# foreach\\
+\mycolX{40mm}{\code{if <cond> \dots else \dots end}} \# if-then\\
+
+
+\mycolX{40mm}{\code{.options reltol=.005}} \# set an option $\in$\\
+{\scriptsize
+\begin{tabular}{l l l l}
+    \underline{Gen/Elem} & \underline{DC/OP} & \underline{AC/Tran} \\[1mm]
+    {[NO]}ACCT & ABSTOL & AUTOSTOP   &   \\
+    NOINIT  & GMIN      & CHGTOL  &   \\
+    LIST    & ITIL[1|2] & CONVSTEP  &   \\
+    NOMOD   & NOOPITER  & CONVABSTEP  &   \\
+    NOPAGE  & PIVREL    & INTERP  &   \\
+    NODE    & PIVTOL    & ITIL[3-6]  &   \\
+    OPTS    & RELTOL    & MAXEVITER  &   \\
+    SEED    & RSHUNT    & MAXOPALTER  &   \\
+    TEMP    & VNTOL     & MAXORD  &   \\
+    TNOM    &           & METHOD  &   \\
+    WARN    &           & NOOPALTER  &   \\
+    BADMOS3 &           & RAMPTIME  &   \\
+    DEFA[D|S] &           & SRCSTEPS  &   \\
+    DEF[L|W] &           & TRTOL  &   \\
+    SCALE &           & XMU  &   \\
+\end{tabular}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Interactive Session}
+
+\textit{General list of commands:}\\
+{\footnotesize \begin{multicols}{4}\begin{itemize}[leftmargin=0,label={}]
+    \item ac
+    \item alias
+    \item alter
+    \item altermod
+    \item alt\textquotesingle rparam
+    \item asciiplot
+    \item aspice
+    \item bug
+    \item cd
+    \item cdump
+    \item circbyline
+    \item codemodel
+    \item compose
+    \item dc
+    \item define
+    \item deftype
+    \item delete
+    \item destroy
+    \item devhelp
+    \item diff
+    \item display
+    \item echo
+    \item edit
+    \item edisplay
+    \item eprint
+    \item eprvcd
+    \item fft
+    \item fourier
+    \item getcwd
+    \item gnuplot
+    \item hardcopy
+    \item help
+    \item history
+    \item inventory
+    \item iplot
+    \item jobs
+    \item let
+    \item linearize
+    \item listing
+    \item load
+    \item mc\_source
+    \item meas
+    \item m[r]dump
+    \item noise
+    \item op
+    \item option
+    \item plot
+    \item pre\_<cmd>
+    \item print
+    \item psd
+    \item quit
+    \item rehash
+    \item remcirc
+    \item remzerov\textquotesingle c
+    \item reset
+    \item reshape
+    \item resume
+    \item rspice
+    \item rusage
+    \item save
+    \item sense
+    \item set
+    \item setcs
+    \item setcirc
+    \item setplot
+    \item setscale
+    \item setseed
+    \item settype
+    \item shell
+    \item shift
+    \item show
+    \item showmod
+    \item snload
+    \item snsave
+    \item source
+    \item spec
+    \item status
+    \item step
+    \item stop
+    \item strcmp
+    \item sysinfo
+    \item tf
+    \item trace
+    \item tran
+    \item transpose
+    \item unalias
+    \item undefine
+    \item unlet
+    \item unset
+    \item version
+    \item where
+    \item wrdata
+    \item write
+    \item wrs2p
+\end{itemize}\end{multicols}}
+
+
+%{\begin{multicols}{3}\begin{itemize}[leftmargin=0,label={}]
+%    \item 
+%\end{itemize}\end{multicols}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Analyses}
+
+\textbf{AC} \textit{\underline{dec}ade, \underline{oct}ave, \underline{lin}ear variation for \underline{n}umb of pts:}\\
+\mycolX{45mm}{\code{\textit{.ac [dec|oct|lin] n fstart fstop}}} \# {\scriptsize ac analysis} \\
+\mycolX{45mm}{\code{.ac dec 10 1K 100MEG}} \# {\scriptsize $f \in [1e3,1e8]$ }\\[1mm]
+
+\textbf{DC} \textit{Sweep a source, resistor, or temperature:}\\
+\mycolX{40mm}{\code{\textit{.dc srcnam vstart vstop vincr}}} \# {\scriptsize dc analysis}\\
+\mycolX{40mm}{\code{.dc VIN 0.25 5.0 0.25}} \# {\scriptsize sweep $V_{IN} \in [.25,5]$}\\
+\mycolX{40mm}{\code{.dc TEMP -15 75 5}} \# {\scriptsize temp sweep} \\
+
+\textbf{Distortion} \textit{:}\\
+\mycolX{40mm}{\code{\textit{.disto dec nd fstart fstop}}} \# {\scriptsize }\\
+\mycolX{40mm}{\code{.disto dec 10 1kHz 100MEG}} \# {\scriptsize }\\
+
+\textbf{Noise} \textit{ :}\\
+\mycolX{50mm}{\code{\textit{.noise v(output) src [dec|lin|oct] pts fstart fstop}}}\\
+\mycolX{55mm}{\code{.noise v(5) VIN dec 10 1kHz 100MEG}} \# {\scriptsize }\\
+
+\textbf{Operating Point} \textit{:}\\
+\mycolX{40mm}{\code{\textit{.op}}} \# {\scriptsize }\\[1mm]
+
+\textbf{Pole-Zero} \textit{ :}\\
+\mycolX{55mm}{\code{\textit{.pz nd1 nd2 nd3 nd4 [vol|cur] [pol|zer|pz]}}} \\
+\mycolX{35mm}{\code{.pz 1 0 3 0 cur pol}} \# {\scriptsize pole-only for currents}\\
+\mycolX{35mm}{\code{.pz 1 0 3 0 vol pz}} \# {\scriptsize poles \& zeros}\\
+
+\textbf{Sensitivity} \textit{ :}\\
+\mycolX{40mm}{\code{\textit{.sens outvar}}} \# {\scriptsize }\\
+\mycolX{40mm}{\code{\textit{+ [dec|oct|lin] n fstart fstop]}}} \\
+\mycolX{40mm}{\code{.sens V(1,OUT)}} \# {\scriptsize }\\
+\mycolX{40mm}{\code{.sens V(OUT) ac dec 10 100 100k}} \\
+
+\textbf{Transfer Function} \textit{ :}\\
+\mycolX{30mm}{\code{\textit{.tf outvar insrc}}} \# {\scriptsize }\\
+\mycolX{30mm}{\code{.tf v(5, 3) VIN}} \# {\scriptsize ratio $\frac{V_{5}}{V_{IN}}$}\\
+\mycolX{30mm}{\code{.tf i(VLOAD) VIN}} \# {\scriptsize }\\
+
+\textbf{Transient} \textit{Study temporal transient, optionally \underline{u}sing \underline{i}nitial \underline{c}onditions:}\\
+\mycolX{40mm}{\code{\textit{.tran tstep tstop [tstart [tmax]] [uic]}}} \\
+\mycolX{40mm}{\code{.tran 1ns 100ns}} \# {\scriptsize $100ns$ transient}\\
+\mycolX{40mm}{\code{.tran 1ns 1us 500ns}} \# {\scriptsize start later}\\
+
+\textbf{Periodic Steady State} \textit{[experimental] calculate indicated harmonics:}\\
+\mycolX{60mm}{\code{\textit{.pss gfreq tstab oscnob psspoints }}} \\
+\mycolX{60mm}{\code{\textit{+ harms sciter steadycoeff [uic]}}} \\
+\mycolX{60mm}{\code{.pss 150 200e-3 2 1024 11 50 5e-3 uic}} \\
+\mycolX{60mm}{\code{.pss 624e6 500n bout 1024 10 100 5e-3 uic}} \\
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Output}
+\textit{$\exists$ several means of getting data out: \texttt{.meas} (interactive-mode only), \texttt{.plot}, \texttt{.print}, \texttt{.four}, \texttt{.probe}, \texttt{.save}. .meas is used in interactive, .plot, .print, .four, in batch, and .probe and .save in both modes.}
+
+
+\mycolX{40mm}{\code{\textit{.save [vector]+}}} \\
+\mycolX{40mm}{\code{.save i(vin) node1 v(node2)}} \# {\scriptsize save 3 nodes}\\
+\mycolX{40mm}{\code{.save \@m1[id] vsource\#branch}} \# {\scriptsize internal device data}\\[1mm]
+
+\mycolX{30mm}{\code{\textit{.print prtype [ov]+}}} \# {\scriptsize prt \underline{o}utput \underline{v}ariable \say{vectors}}\\
+\mycolX{40mm}{\code{.print tran v(4) i(vin)}} \\
+\mycolX{40mm}{\code{.print dc v(2) i(vsrc) v(2, 7)}} \# {\scriptsize volt-$\Delta$, $v(2)-v(7)$}\\
+\mycolX{40mm}{\code{.print ac vm(4, 2)}} \# {\scriptsize volt-$\Delta$ \underline{m}agnitude}\\[1mm]
+
+\mycolX{45mm}{\code{\textit{.plot pltype [ov1 [(plo1, phi1)]?]+}}} \# {\scriptsize }\\
+\mycolX{40mm}{\code{.plot dc v(4) v(5) v(1)}} \# {\scriptsize no \say{plo}, \say{phi}}\\
+\mycolX{40mm}{\code{.plot dc emit base out}} \# {\scriptsize using node names}\\
+\mycolX{40mm}{\code{.plot db(coll) ph(coll)}} \# {\scriptsize Bode-style plot}\\
+\mycolX{40mm}{\code{.plot tran v(17, 5) (2, 5)}}  {\scriptsize }\\[1mm]
+
+\mycolX{30mm}{\code{\textit{.four freq [ov]+}}} \# {\scriptsize fourier analysis}\\
+\mycolX{30mm}{\code{.four 100K v(5)}} \# {\scriptsize  fundamental \texttt{freq} $100k$}\\[1mm]
+
+\mycolX{40mm}{\code{\textit{.probe [vector]+}}} \# {\scriptsize save to rawfile}\\
+\mycolX{40mm}{\code{.probe i(vin) input output}} \\[1mm]
+
+\texttt{.meas} \textit{ defaults to extracting time, use \texttt{FIND} for another variable. Store measurement in \texttt{result} parameter, and transform it with specified \underline{FUNC}tion $\in$ {\scriptsize [AVG|MAX[\_AT]|MIN[\_AT]|PP|RMS|DERIV|INTEG]}. Snapshot data at specific time with \texttt{WHEN}, or bookend a range of time (generally, the abscissa) with triggers using \texttt{\underline{TRIG}}ger .. \texttt{\underline{TARG}}et, or at specified times using \texttt{FROM} .. \texttt{TO}.}\\
+{\scriptsize \mycolX{40mm}{\code{\textit{.MEAS [DC|AC|TRAN|SP] result [FUNC]?}}}\\
+\mycolX{40mm}{\code{\textit{+ [[TRIG|TARG] trig\_var VAL=val [TD=td]? }}} \\
+\mycolX{40mm}{\code{\textit{+ [CROSS=\# | CROSS=LAST]? [RISE=\# | RISE=LAST]?}}} \\
+\mycolX{40mm}{\code{\textit{+ [FALL=\# | FALL=LAST]? [AT=time]?}}}} \\
+{\scriptsize 
+\mycolX{40mm}{\code{.measure tran tdiff TRIG v(1) VAL=0.5 RISE=1 }}\\
+\mycolX{40mm}{\code{+ TARG v(1) VAL=0.5 RISE=2}}\\
+\mycolX{40mm}{\code{.measure tran teval WHEN v(2)=0.7 CROSS=LAST}} \\
+\mycolX{40mm}{\code{.measure tran teval WHEN v(2)=v(1) RISE=LAST}} \\
+\mycolX{40mm}{\code{.measure tran yeval FIND v(2) WHEN v(1)=-0.4 FALL=LAST}} \\
+\mycolX{40mm}{\code{.meas tran out\_slew trig v(out) val=\textasciigrave 0.2*vp\textasciigrave rise=2 }} \\
+\mycolX{40mm}{\code{+ targ v(out) val=`0.8*vp` rise=2}} \\
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Subcircuits}
+
+\textit{Afford hierarchically nestable modeling (though flattened upon compilation). Can expose an arbitrary \# of nodes. For example, a voltage divider:}\\
+\mycolX{35mm}{\code{.subckt vdivide 1 2 3}} \$ 3 ports \\
+\mycolX{35mm}{\code{r1 1 2 10K}} \$ 10K resistor \\
+\mycolX{35mm}{\code{r2 2 3 5K}} \$ 5K resistor \\
+\mycolX{35mm}{\code{.ends vdivide}} \$ exclude to end all \\[2mm]
+\textit{Can parameterize subckts, here with rval, cval:}\\
+\mycolX{40mm}{\code{.subckt myfilter in out rval=100k  cval=100nF}} \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Models}
+
+\textit{General format and example:}\\
+\mycolX{60mm}{\code{.model [NAME] [TYPE] ([PARAM]* )}}  \\
+\mycolX{60mm}{\code{.model MOD1 npn (bf=50 is=1e-13 vbf=50)}}  \\
+
+\textit{Model Types $\in$: }\\
+\begin{tabular}{l l}
+Code & Type \\
+R & Resistor\\
+C & Capacitor \\
+L & Inductor \\
+SW & V-controlled Switch\\
+CSW & I-controlled Switch \\
+URC & Uniform RC Model \\
+LTRA & Lossy Trans. Line\\
+D & Diode \\
+NPN & NPN BJT \\
+PNP & PNP BJT \\
+NJF & N-channel JFET\\
+PJF & P-channel JFET \\
+NMOS & N-channel MOSFET\\
+PMOS & P-channel MOSFET\\
+NMF & N-channel MESFET\\
+PMF & P-channel MESFET\\
+VDMOS & Power MOS\\
+\end{tabular}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{API}
+\textit{Include \texttt{sharedspice.h} in client code. Compile ngspice with -{}-with-ngshared to yield ngshared.lib, which you link to from client code.}\\
+
+\textit{Callbacks $\in$:}
+\begin{multicols}{2}
+{\footnotesize 
+\begin{itemize}[label={}]
+    \item SendChar 
+    \item SendStat
+    \item ControlledExit
+    \item SendData
+    \item SendInitData
+    \item BgThreadRunning
+    \item SendEvtData
+    \item SendInitEvtData
+\end{itemize}
+}
+\end{multicols}
+
+\textit{API commands prefaced with } \texttt{ngSpice\_} \textit{, suffixed with:}
+\begin{multicols}{2}
+{\footnotesize 
+\begin{itemize}[label={}]
+    \item Init
+    \item Init\_Sync
+    \item running
+    \item Command
+    \item Get\_Vec\_Info
+    \item CurPlot
+    \item AllPlots
+    \item AllVecs
+    \item SetBkpt
+    \item Init\_Evt
+    \item Get\_Evt\_NodeInfo
+    \item All\_Evt\_Nodes
+\end{itemize}
+}
+\end{multicols}
+
+\textit{Data structs to retrieve simulation data $\in$} \texttt{vecinfo}, \texttt{vector\_info}, \texttt{vecinfoall}. \\
+
+
+
+
+

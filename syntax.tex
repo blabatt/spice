@@ -1,0 +1,73 @@
+\textit{\href{http://ngspice.sourceforge.net/docs/ngspice-manual.pdf}{SPICE} simulates circuits using an iterative algorithm to approximate circuit voltages \& currents under a wide number of stimuli. The general pattern involves creating a \say{\textbf{netlist}}, followed by the invocation of one or more \say{\textbf{analyses}.} There exist several ways to \textbf{extract} data. Interactive or batch \say{\textbf{control}} affords more granular simulator manipulation, while \say{\textbf{models}} allow granular setup of individual circuit elements. \say{\textbf{XSPICE}} enables mixed analog/digital simulations, and an \textbf{API} enables remote control by other applications. For example:}
+
+\mycolX{40mm}{\code{.TITLE PNP Power Switch}} \$ title \\
+\mycolX{40mm}{\code{* Simulating a BJT switch}} \$ line comment \\
+\mycolX{40mm}{\code{.GLOBAL gnd vcc}} \$ global elements \\
+\mycolX{40mm}{\code{.INCLUDE /my/file}} \$ import file \\
+\mycolX{40mm}{\code{.LIB /my/file mod1}} \$ import module \\
+\mycolX{40mm}{\code{.temp 27}} \$ set temperature \\
+\mycolX{40mm}{\code{.param pvcc=5}} \$ variables \\
+\mycolX{40mm}{\code{.param vmax=\{1 + pvcc\}}} \$ expressions \\
+\mycolX{40mm}{\code{.func foo(a,b) = {a + b}}} \$ function \\
+\mycolX{40mm}{\code{RF2=1K \$ Gain set by RF2 }} \$ in-line cmnt \\
+\mycolX{40mm}{\code{.END}} \$ end SPICE \\
+
+\textit{You can invoke from within \textbf{KiCad}, which will invoke an instance of ngspice in an external terminal window using the netlist that KiCad exports. See \href{http://ngspice.sourceforge.net/ngspice-eeschema.html\#external}{here}. For more \textbf{tutorials}, see \href{http://ngspice.sourceforge.net/tutorials.html}{here}. For simulating \textbf{PSpice} and LTSpice within ngspice, see \href{https://forum.kicad.info/t/simulations-pspice-ngspice-and-ltspice/15230/6}{here}.}
+\section{Syntax}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Scale Factors}
+
+\textit{Scale factors $\in$ [T|G|M|K|m|u|n|p|f] are suffixed directly following a number.}\\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Built-in Functions}
+
+\textit{Expressions can include many of the normal functions: trig (\texttt{sin}, \texttt{cos}, \texttt{tan}, \texttt{acos}, \texttt{asin}, \texttt{atan}), hyperbolic (\texttt{sinh}, \texttt{cosh}, \texttt{acosh}, \texttt{asinh}, \texttt{atanh}), exponential (\texttt{exp}, \texttt{ln}, \texttt{log}, \texttt{log10}), misccellaneous (\texttt{abs}, \texttt{sqrt}, \texttt{u}, \texttt{u2}, \texttt{uramp}, \texttt{floor}, \texttt{ceil}, \texttt{i}).} \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Options}
+{\scriptsize
+\begin{tabular}{l l l l}
+    \underline{Gen/Elem} & \underline{DC/OP} & \underline{AC/Tran} \\[1mm]
+    {[NO]}ACCT & ABSTOL & AUTOSTOP   &   \\
+    NOINIT  & GMIN      & CHGTOL  &   \\
+    LIST    & ITIL[1|2] & CONVSTEP  &   \\
+    NOMOD   & NOOPITER  & CONVABSTEP  &   \\
+    NOPAGE  & PIVREL    & INTERP  &   \\
+    NODE    & PIVTOL    & ITIL[3-6]  &   \\
+    OPTS    & RELTOL    & MAXEVITER  &   \\
+    SEED    & RSHUNT    & MAXOPALTER  &   \\
+    TEMP    & VNTOL     & MAXORD  &   \\
+    TNOM    &           & METHOD  &   \\
+    WARN    &           & NOOPALTER  &   \\
+    BADMOS3 &           & RAMPTIME  &   \\
+    DEFA[D|S] &           & SRCSTEPS  &   \\
+    DEF[L|W] &           & TRTOL  &   \\
+    SCALE &           & XMU  &   \\
+\end{tabular}}
+\ \\
+
+%\textit{Conditionals used for model-selection:}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Conditionals}
+
+\mycolX{60mm}{\code{.if(m0==1) .model N1 NMOS lvl=49 Ver=3.1}} \\
+\mycolX{60mm}{\code{.elseif(m1==1) .model N1 NMOS lvl=49 Ver=3}} \\
+\mycolX{60mm}{\code{.else .model N1 NMOS lvl=49 Ver=3.3.0}} \\
+\mycolX{60mm}{\code{.endif}} \\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Looping}
+\mycolX{40mm}{\code{while <cond> \dots end}} \# while \\
+\mycolX{40mm}{\code{repeat <num> \dots end}} \# repeat\\
+\mycolX{40mm}{\code{dowhile <cond> \dots end}} \# dowhile\\
+\mycolX{40mm}{\code{foreach <var> <val> \dots end}} \# foreach\\
+\textit{Common ancillary looping aids include: }\texttt{label}, \texttt{goto}, \texttt{continue}, \textit{ and }\texttt{break}\textit{.}
+
+
+

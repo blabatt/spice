@@ -1,0 +1,45 @@
+\section{API}
+
+\textit{Include \texttt{sharedspice.h} in client code. Compile ngspice with -{}-with-ngshared to yield ngshared.lib, which you link to from client code.}\\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Callbacks}
+{\footnotesize \begin{multicols}{2}
+\begin{itemize}[label={}]
+    \item SendChar 
+    \item SendStat
+    \item ControlledExit
+    \item SendData
+    \item SendInitData
+    \item BgThreadRunning
+    \item SendEvtData
+    \item SendInitEvtData
+\end{itemize}\end{multicols}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Commands}
+\textit{API commands prefaced with } \texttt{ngSpice\_} \textit{, suffixed with:}
+{\footnotesize \begin{multicols}{2}
+\begin{itemize}[label={}]
+    \item Init
+    \item Init\_Sync
+    \item running
+    \item Command
+    \item Get\_Vec\_Info
+    \item CurPlot
+    \item AllPlots
+    \item AllVecs
+    \item SetBkpt
+    \item Init\_Evt
+    \item Get\_Evt\_NodeInfo
+    \item All\_Evt\_Nodes
+\end{itemize}\end{multicols}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Data}
+\textit{Data structs to retrieve simulation data $\in$} \texttt{vecinfo}, \texttt{vector\_info}, \texttt{vecinfoall}. \\
+\\[75mm]
